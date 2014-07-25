@@ -220,7 +220,7 @@ class GameModel: NSObject {
     // Prepare the generator closure. This closure differs in behavior depending on the direction of the move. It is
     // used by the method to generate a list of tiles which should be modified. Depending on the direction this list
     // may represent a single row or a single column, in either direction.
-    let coordinateGenerator: (Int) -> [(Int, Int)] = { (iteration: Int) -> [(Int, Int)[] in
+    let coordinateGenerator: (Int) -> [(Int, Int)] = { (iteration: Int); -> [(Int, Int)[] in
       let buffer = Array<(Int, Int)>(count:self.dimension, repeatedValue: (0, 0))
       for i in 0..<self.dimension {
         switch direction {
