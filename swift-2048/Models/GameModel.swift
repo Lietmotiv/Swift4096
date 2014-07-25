@@ -32,7 +32,7 @@ class GameModel: NSObject {
   //  is accessed unless the delegate type is a specific class (rather than a protocol).
   let delegate: GameModelProtocol
 
-  var queue: MoveCommand[]
+  var queue: [MoveCommand]
   var timer: NSTimer
 
   let maxCommands = 100
@@ -42,7 +42,7 @@ class GameModel: NSObject {
     dimension = d
     threshold = t
     self.delegate = delegate
-    queue = MoveCommand[]()
+    queue = [MoveCommand]()
     timer = NSTimer()
     gameboard = SquareGameboard(dimension: d, initialValue: .Empty)
     super.init()
@@ -129,10 +129,10 @@ class GameModel: NSObject {
   }
 
   /// Return a list of tuples describing the coordinates of empty spots remaining on the gameboard.
-  func gameboardEmptySpots() -> (Int, Int)[] {
+  func gameboardEmptySpots() -> [(Int, Int)] {
     var buffer = Array<(Int, Int)>()
-    for i in 0..dimension {
-      for j in 0..dimension {
+    for i in 0..<dimension {
+      for j in 0..<dimension {
         switch gameboard[i, j] {
         case .Empty:
           buffer += (i, j)
@@ -183,8 +183,8 @@ class GameModel: NSObject {
     }
 
     // Run through all the tiles and check for possible moves
-    for i in 0..dimension {
-      for j in 0..dimension {
+    for i in 0..<dimension {
+      for j in 0..<dimension {
         switch gameboard[i, j] {
         case .Empty:
           assert(false, "Gameboard reported itself as full, but we still found an empty tile. This is a logic error.")
@@ -199,8 +199,8 @@ class GameModel: NSObject {
   }
 
   func userHasWon() -> (Bool, (Int, Int)?) {
-    for i in 0..dimension {
-      for j in 0..dimension {
+    for i in 0..<dimension {
+      for j in 0..<dimension {
         // Look for a tile with the winning score or greater
         switch gameboard[i, j] {
         case let .Tile(v) where v >= threshold:
@@ -220,9 +220,9 @@ class GameModel: NSObject {
     // Prepare the generator closure. This closure differs in behavior depending on the direction of the move. It is
     // used by the method to generate a list of tiles which should be modified. Depending on the direction this list
     // may represent a single row or a single column, in either direction.
-    let coordinateGenerator: (Int) -> (Int, Int)[] = { (iteration: Int) -> (Int, Int)[] in
+    let coordinateGenerator: (Int) -> [(Int, Int)] = { (iteration: Int) -> [(Int, Int)[] in
       let buffer = Array<(Int, Int)>(count:self.dimension, repeatedValue: (0, 0))
-      for i in 0..self.dimension {
+      for i in 0..<self.dimension {
         switch direction {
         case .Up: buffer[i] = (i, iteration)
         case .Down: buffer[i] = (self.dimension - i - 1, iteration)
@@ -234,7 +234,7 @@ class GameModel: NSObject {
     }
 
     var atLeastOneMove = false
-    for i in 0..dimension {
+    for i in 0..<dimension {
       // Get the list of coords
       let coords = coordinateGenerator(i)
 
@@ -384,3 +384,4 @@ class GameModel: NSObject {
     return convert(collapse(condense(group)))
   }
 }
+
